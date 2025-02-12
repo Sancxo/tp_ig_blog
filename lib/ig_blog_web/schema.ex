@@ -22,6 +22,11 @@ defmodule IgBlogWeb.Schema do
       resolve(&Resolvers.get_post/3)
     end
 
+    field :get_draft, :post do
+      arg(:slug, non_null(:string))
+      resolve(&Resolvers.get_draft/3)
+    end
+
     field :get_user, :user do
       arg(:id, non_null(:id))
       resolve(&Resolvers.get_user/3)
@@ -53,7 +58,13 @@ defmodule IgBlogWeb.Schema do
     end
   end
 
-  # mutation do
-
-  # end
+  mutation do
+    field :create_post, :post do
+      arg(:title, :string)
+      arg(:body, :string)
+      arg(:slug, :string)
+      arg(:status, :string)
+      resolve(&Resolvers.create_post/3)
+    end
+  end
 end

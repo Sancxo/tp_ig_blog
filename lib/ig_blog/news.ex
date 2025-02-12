@@ -61,6 +61,9 @@ defmodule IgBlog.News do
 
   def get_post_by(query), do: Repo.get_by(Post, query) |> Repo.preload(:user)
 
+  def get_draft_by(query),
+    do: Post |> where([p], p.status == :draft) |> Repo.get_by(query) |> Repo.preload(:user)
+
   @doc """
   Creates a post.
 

@@ -27,6 +27,21 @@ defmodule IgBlogWeb.Resolvers do
     {:ok, News.get_post_by(args)}
   end
 
+  def get_draft(_, args, %{context: %{current_user: %User{is_admin: true}}}) do
+    {:ok, News.get_draft_by(args)}
+  end
+
+  def get_draft(_, _, _) do
+    {:error, "Unauthorized (you are not identified as 'admin')"}
+  end
+
+  def create_post(_, args, %{context: %{current_user: %User{is_admin: true}}}) do
+    args =
+      args |> Map.put_new(:published_at, DateTime.utc_now())
+
+    News.create_post(args)
+  end
+
   def get_user(_, %{id: id}, _) do
     {:ok, Accounts.get_user!(id)}
   end
