@@ -15,7 +15,7 @@ defmodule IgBlogWeb.Schema do
       resolve(&NewsResolvers.list_publications/3)
     end
 
-    field :list_draft, list_of(:post) do
+    field :list_drafts, list_of(:post) do
       resolve(&NewsResolvers.list_drafts/3)
     end
 
@@ -40,8 +40,8 @@ defmodule IgBlogWeb.Schema do
     end
 
     field :log_in, :user do
-      arg(:fullname, :string)
-      arg(:password, :string)
+      arg(:fullname, non_null(:string))
+      arg(:password, non_null(:string))
       resolve(&AccountsResolvers.log_in/3)
 
       middleware(fn resolution, _ ->
@@ -68,16 +68,16 @@ defmodule IgBlogWeb.Schema do
   mutation do
     # News
     field :create_post, :post do
-      arg(:title, :string)
+      arg(:title, non_null(:string))
       arg(:body, :string)
-      arg(:slug, :string)
-      arg(:status, :string)
+      arg(:slug, non_null(:string))
+      arg(:status, non_null(:string), default_value: "draft")
 
       resolve(&NewsResolvers.create_post/3)
     end
 
     field :update_post, :post do
-      arg(:post_id, :id)
+      arg(:post_id, non_null(:id))
       arg(:title, :string)
       arg(:body, :string)
       arg(:slug, :string)
@@ -87,7 +87,7 @@ defmodule IgBlogWeb.Schema do
     end
 
     field :delete_post, :post do
-      arg(:post_id, :id)
+      arg(:post_id, non_null(:id))
 
       resolve(&NewsResolvers.delete_post/3)
     end
@@ -97,14 +97,14 @@ defmodule IgBlogWeb.Schema do
     field :create_user, :user do
       arg(:password, non_null(:string))
       arg(:full_name, non_null(:string))
-      arg(:is_admin, :boolean)
+      arg(:is_admin, :boolean, default_value: false)
 
       resolve(&AccountsResolvers.create_user/3)
     end
 
     @desc "Update an existing user (for admins only)"
     field :update_user, :user do
-      arg(:user_id, :id)
+      arg(:user_id, non_null(:id))
       arg(:password, :string)
       arg(:full_name, :string)
       arg(:is_admin, :boolean)
@@ -113,7 +113,7 @@ defmodule IgBlogWeb.Schema do
     end
 
     field :delete_user, :user do
-      arg(:user_id, :id)
+      arg(:user_id, non_null(:id))
 
       resolve(&AccountsResolvers.delete_user/3)
     end
