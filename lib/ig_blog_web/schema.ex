@@ -96,7 +96,7 @@ defmodule IgBlogWeb.Schema do
     @desc "Create a new user (for admins only)"
     field :create_user, :user do
       arg(:password, non_null(:string))
-      arg(:full_name, non_null(:string))
+      arg(:fullname, non_null(:string))
       arg(:is_admin, :boolean, default_value: false)
 
       resolve(&AccountsResolvers.create_user/3)
