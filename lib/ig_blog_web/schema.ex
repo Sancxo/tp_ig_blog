@@ -111,5 +111,11 @@ defmodule IgBlogWeb.Schema do
 
       resolve(&AccountsResolvers.update_user/3)
     end
+
+    field :delete_user, :user do
+      arg(:user_id, :id)
+
+      resolve(&AccountsResolvers.delete_user/3)
+    end
   end
 end
