@@ -85,21 +85,13 @@ defmodule IgBlog.News do
       {:error, %Ecto.Changeset{}}
 
   """
-
-  # def create_post(%User{} = user, attrs \\ %{}) do
-  #   with changeset <- Ecto.build_assoc(user, :posts, attrs),
-  #        {:ok, post} <- Repo.insert(changeset) do
-  #     {:ok, Repo.preload(post, :user)}
-  #   else
-  #     {:error, error} -> {:error, error}
-  #   end
-  # end
-
   def create_post(attrs \\ %{}) do
-    %Post{}
-    |> Post.changeset(attrs)
-    |> Repo.insert!()
-    |> Repo.preload(:user)
+    with changeset <- Post.changeset(%Post{}, attrs),
+         {:ok, post} <- Repo.insert(changeset) do
+      {:ok, Repo.preload(post, :user)}
+    else
+      {:error, error} -> {:error, error}
+    end
   end
 
   @doc """
