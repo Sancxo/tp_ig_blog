@@ -1,6 +1,6 @@
 defmodule IgBlogWeb.Types do
   use Absinthe.Schema.Notation
-  alias IgBlogWeb.Resolvers
+  alias IgBlogWeb.Resolvers.NewsResolvers
 
   @desc "A user"
   object :user do
@@ -10,7 +10,7 @@ defmodule IgBlogWeb.Types do
     field :is_admin, :boolean
 
     field :posts, list_of(:post) do
-      resolve(&Resolvers.list_posts/3)
+      resolve(&NewsResolvers.list_posts/3)
     end
   end
 
