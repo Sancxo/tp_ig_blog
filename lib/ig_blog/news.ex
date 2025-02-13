@@ -26,6 +26,7 @@ defmodule IgBlog.News do
   def list_publications do
     Post
     |> where([p], p.status == :published)
+    |> order_by([p], desc: p.published_at)
     |> Repo.all()
     |> Repo.preload(:user)
   end
@@ -33,12 +34,16 @@ defmodule IgBlog.News do
   def list_drafts do
     Post
     |> where([p], p.status == :draft)
+    |> order_by([p], desc: p.published_at)
     |> Repo.all()
     |> Repo.preload(:user)
   end
 
   def list_posts_by_user(user_id) do
-    Post |> where([p], p.author_id == ^user_id) |> Repo.all()
+    Post
+    |> where([p], p.author_id == ^user_id)
+    |> order_by([p], desc: p.published_at)
+    |> Repo.all()
   end
 
   @doc """
@@ -59,7 +64,11 @@ defmodule IgBlog.News do
 
   def get_post(id), do: Repo.get(Post, id) |> Repo.preload(:user)
 
-  def get_post_by(query), do: Repo.get_by(Post, query) |> Repo.preload(:user)
+  def get_post_by(query) do
+    Post
+    |> Repo.get_by(query)
+    |> Repo.preload(:user)
+  end
 
   def get_draft_by(query),
     do: Post |> where([p], p.status == :draft) |> Repo.get_by(query) |> Repo.preload(:user)
@@ -76,10 +85,21 @@ defmodule IgBlog.News do
       {:error, %Ecto.Changeset{}}
 
   """
+
+  # def create_post(%User{} = user, attrs \\ %{}) do
+  #   with changeset <- Ecto.build_assoc(user, :posts, attrs),
+  #        {:ok, post} <- Repo.insert(changeset) do
+  #     {:ok, Repo.preload(post, :user)}
+  #   else
+  #     {:error, error} -> {:error, error}
+  #   end
+  # end
+
   def create_post(attrs \\ %{}) do
     %Post{}
     |> Post.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert!()
+    |> Repo.preload(:user)
   end
 
   @doc """
