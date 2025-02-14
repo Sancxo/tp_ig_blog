@@ -15,30 +15,36 @@ defmodule IgBlogWeb.Schema do
       resolve(&NewsResolvers.list_publications/3)
     end
 
+    @desc "Get all draft posts (for admins only)"
     field :list_drafts, list_of(:post) do
       resolve(&NewsResolvers.list_drafts/3)
     end
 
+    @desc "Search inside the title, slug and body of a published post."
     field :search_publications, list_of(:post) do
       arg(:term, :string)
       resolve(&NewsResolvers.search_publications/3)
     end
 
-    field :get_post, :post do
+    @desc "Get a single published post from its slug"
+    field :get_publication, :post do
       arg(:slug, non_null(:string))
       resolve(&NewsResolvers.get_post/3)
     end
 
+    @desc "Get a single draft post from its slug (for admins only)"
     field :get_draft, :post do
       arg(:slug, non_null(:string))
       resolve(&NewsResolvers.get_draft/3)
     end
 
     # Accounts
+    @desc "List all users"
     field :list_users, list_of(:user) do
       resolve(&AccountsResolvers.list_users/3)
     end
 
+    @desc "Get a single user from its id"
     field :get_user, :user do
       arg(:id, non_null(:id))
       resolve(&AccountsResolvers.get_user/3)
@@ -47,6 +53,7 @@ defmodule IgBlogWeb.Schema do
 
   mutation do
     # News
+    @desc "Creates a post (for admins only)"
     field :create_post, :post do
       arg(:title, non_null(:string))
       arg(:body, :string)
@@ -56,6 +63,7 @@ defmodule IgBlogWeb.Schema do
       resolve(&NewsResolvers.create_post/3)
     end
 
+    @desc "Updates a post (for admins only)"
     field :update_post, :post do
       arg(:post_id, non_null(:id))
       arg(:title, :string)
@@ -66,6 +74,7 @@ defmodule IgBlogWeb.Schema do
       resolve(&NewsResolvers.update_post/3)
     end
 
+    @desc "Deletes a post (for admins only)"
     field :delete_post, :post do
       arg(:post_id, non_null(:id))
 
@@ -73,6 +82,7 @@ defmodule IgBlogWeb.Schema do
     end
 
     # Accounts
+    @desc "Logs a user in and returns its data"
     field :log_in, :user do
       arg(:fullname, non_null(:string))
       arg(:password, non_null(:string))
@@ -88,6 +98,7 @@ defmodule IgBlogWeb.Schema do
       end)
     end
 
+    @desc "Logs a user out and returns its data"
     field :log_out, :user do
       resolve(&AccountsResolvers.log_out/3)
 
@@ -117,6 +128,7 @@ defmodule IgBlogWeb.Schema do
       resolve(&AccountsResolvers.update_user/3)
     end
 
+    @desc "Deletes a user (for admins only)"
     field :delete_user, :user do
       arg(:user_id, non_null(:id))
 
