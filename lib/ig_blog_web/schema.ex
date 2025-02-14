@@ -74,7 +74,7 @@ defmodule IgBlogWeb.Schema do
       resolve(&NewsResolvers.update_post/3)
     end
 
-    @desc "Deletes a post (for admins only)"
+    @desc "Deletes a post from its id (for admins only)"
     field :delete_post, :post do
       arg(:post_id, non_null(:id))
 
@@ -128,7 +128,7 @@ defmodule IgBlogWeb.Schema do
       resolve(&AccountsResolvers.update_user/3)
     end
 
-    @desc "Deletes a user (for admins only)"
+    @desc "Deletes a user from its id (for admins only)"
     field :delete_user, :user do
       arg(:user_id, non_null(:id))
 
