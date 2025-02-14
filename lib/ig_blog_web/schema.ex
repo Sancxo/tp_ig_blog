@@ -19,6 +19,11 @@ defmodule IgBlogWeb.Schema do
       resolve(&NewsResolvers.list_drafts/3)
     end
 
+    field :search_publications, list_of(:post) do
+      arg(:term, :string)
+      resolve(&NewsResolvers.search_publications/3)
+    end
+
     field :get_post, :post do
       arg(:slug, non_null(:string))
       resolve(&NewsResolvers.get_post/3)

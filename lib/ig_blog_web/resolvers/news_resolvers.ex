@@ -19,6 +19,10 @@ defmodule IgBlogWeb.Resolvers.NewsResolvers do
   def list_drafts(_parent, _args, _),
     do: {:error, "Unauthorized (you are not logged in or not identified as 'admin')"}
 
+  def search_publications(_, %{term: term}, %{context: %{current_user: %User{}}}) do
+    {:ok, News.search_publications(term)}
+  end
+
   def get_post(_, args, %{context: %{current_user: %User{}}}) do
     {:ok, News.get_post_by(args)}
   end

@@ -46,6 +46,18 @@ defmodule IgBlog.News do
     |> Repo.all()
   end
 
+  def search_publications(term) do
+    Post
+    |> where(
+      [p],
+      ilike(p.title, ^"%#{term}%") or ilike(p.slug, ^"%#{term}%") or ilike(p.body, ^"%#{term}%")
+    )
+    |> where([p], p.status == :published)
+    |> order_by([p], desc: p.published_at)
+    |> Repo.all()
+    |> Repo.preload(:user)
+  end
+
   @doc """
   Gets a single post.
 
