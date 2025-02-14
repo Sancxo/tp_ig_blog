@@ -16,16 +16,18 @@ defmodule IgBlogWeb.Context do
   end
 
   def before_send(
-        %Plug.Conn{cookies: cookies} = conn,
+        %Plug.Conn{} = conn,
         %Absinthe.Blueprint{execution: %{context: context}}
       ) do
+    is_connected = get_session(conn, :user_id)
+
     cond do
-      # we received an user_id from the :log_in mutation and the cookie wasn't yet created
-      (context[:user_id] || context[:current_user]) && !cookies["_ig_blog_key"] ->
+      # we received an user_id from the :log_in mutation or the current_user and user_id is not inside session
+      (context[:user_id] || context[:current_user]) && !is_connected ->
         put_session(conn, :user_id, context[:user_id])
 
-      # the user_id was deleted from context by the :log_out mutation and the cookie still exists in conn
-      !context[:user_id] && !context[:current_user] && cookies["_ig_blog_key"] ->
+      # the user_id was deleted from context by the :log_out mutation and the cookie already has user_id inside session
+      !context[:user_id] && !context[:current_user] && is_connected ->
         delete_session(conn, :user_id)
 
       true ->
